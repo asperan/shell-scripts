@@ -22,6 +22,7 @@ if [[ $# -ge 1 ]] ; then
                           fi
                       fi
                       ((ARG_INDEX=ARG_INDEX+1))
+                  fi
                   ;;
         esac
     done
