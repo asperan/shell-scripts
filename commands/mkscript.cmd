@@ -1,19 +1,34 @@
 # Uses the default shell
 
-#check if there is one argument
-if (( $#==1 )) ; then
-    NOMEFILE=$(ls | grep $1)
-    if [[ "$1" = "${NOMEFILE}" ]] ; then
-        echo "A file with this name already exists"
-        exit 1
-    else
-        touch $1
-        chmod u+x $1
-        echo "File created successfully"
-        ls -lh | grep $1
-        exit 0
-    fi
+# check the number of arguments
+if [[ $# -ge 1 ]] ; then
+    ARG_INDEX=1
+    while [[ ARG_INDEX -le $# ]] ; do
+        case ${!ARG_INDEX} in
+            "-s") (( ARG_INDEX = ARG_INDEX + 1 ))
+                  BASH_PATH=${!ARG_INDEX}
+                  (( ARG_INDEX = ARG_INDEX + 1 ))
+                  ;;
+            *)    FILE_NAME=${!ARG_INDEX}
+                  if [[ -n ${FILE_NAME} ]] ; then
+                      if [[ -e ${FILE_NAME} ]] ; then
+                          echo "A file called ${FILE_NAME} already exists"
+                      else
+                          touch ${FILE_NAME}
+                          chmod u+x ${FILE_NAME}
+                          echo "File \"${FILE_NAME}\" created successfully"
+                          if [[ -n ${BASH_PATH} ]] ; then
+                              echo "#!${BASH_PATH}" > "./${FILE_NAME}"
+                          fi
+                      fi
+                      ((ARG_INDEX=ARG_INDEX+1))
+                  ;;
+        esac
+    done
 else
     echo "usage: mkscript [filename]"
     exit 1
 fi
+
+# in /etc/profile custom path
+# in /home/user/.bashrc custom alias
