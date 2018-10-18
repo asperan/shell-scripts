@@ -1,10 +1,14 @@
 # Uses the default shell
 
+
+
+
 # check the number of arguments
 if [[ $# -ge 1 ]] ; then
     ARG_INDEX=1
     while [[ ARG_INDEX -le $# ]] ; do
         case ${!ARG_INDEX} in
+            # the next files will have the shell specified by path as used shell until another "-s" option
             "-s") (( ARG_INDEX = ARG_INDEX + 1 ))
                   BASH_PATH=${!ARG_INDEX}
                   (( ARG_INDEX = ARG_INDEX + 1 ))
@@ -27,7 +31,7 @@ if [[ $# -ge 1 ]] ; then
         esac
     done
 else
-    echo "usage: mkscript [filename]"
+    echo "usage: mkscript [-options] [filenames]"
     exit 1
 fi
 
